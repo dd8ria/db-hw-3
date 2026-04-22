@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Request Status Summary — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+<main>
+  <p class="page-title">Report 1 — Request Status Summary</p>
+  <p class="page-sub">Based on output document <strong>OD1</strong> | Source: IncomingRequest, RequestAssignment, Department, Document, Task</p>
+  <div class="card">
+    <h2>Results</h2>
+    <p th:if="${rows.isEmpty()}" style="color:#888;font-size:.9rem;">No records found.</p>
+    <div class="tbl-wrap" th:unless="${rows.isEmpty()}">
+      <table>
+        <thead>
+          <tr>
+            <th>Request ID</th><th>Submission Date</th><th>Sender Name</th>
+            <th>Subject</th><th>Assigned Department</th><th>Status</th>
+            <th>Documents</th><th>Tasks</th><th>Last Update</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="r : ${rows}">
+            <td th:text="${r.requestId()}"></td>
+            <td th:text="${r.submissionDate()}"></td>
+            <td th:text="${r.senderName()}"></td>
+            <td th:text="${r.subject()}"></td>
+            <td th:text="${r.assignedDepartment() != null ? r.assignedDepartment() : '—'}"></td>
+            <td>
+              <span th:if="${r.currentStatus() == 'Completed'}"   class="badge badge-green"  th:text="${r.currentStatus()}"></span>
+              <span th:if="${r.currentStatus() == 'In Progress' or r.currentStatus() == 'Assigned'}" class="badge badge-blue" th:text="${r.currentStatus()}"></span>
+              <span th:if="${r.currentStatus() == 'Registered'}"  class="badge badge-gray"   th:text="${r.currentStatus()}"></span>
+              <span th:if="${r.currentStatus() != 'Completed' and r.currentStatus() != 'In Progress'
+                         and r.currentStatus() != 'Assigned'  and r.currentStatus() != 'Registered'}"
+                    class="badge badge-yellow" th:text="${r.currentStatus() != null ? r.currentStatus() : '—'}"></span>
+            </td>
+            <td th:text="${r.relatedDocumentCount()}"></td>
+            <td th:text="${r.relatedTaskCount()}"></td>
+            <td th:text="${r.lastUpdateDate()}"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="row-count" th:text="'Total: ' + ${rows.size()} + ' record(s)'"></p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

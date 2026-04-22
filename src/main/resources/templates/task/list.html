@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Tasks — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+
+<main>
+  <p class="page-title">Tasks</p>
+  <p class="page-sub">Form 2: Update Task Status</p>
+
+  <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+  <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+  <div class="card">
+    <h2>All Tasks</h2>
+
+    <div th:if="${tasks.isEmpty()}">
+      <p style="color:#888;font-size:.9rem;">No tasks found.</p>
+    </div>
+
+    <div class="tbl-wrap" th:unless="${tasks.isEmpty()}">
+      <table>
+        <thead>
+          <tr>
+            <th>Task ID</th>
+            <th>Description</th>
+            <th>Request ID</th>
+            <th>Dept ID</th>
+            <th>Staff ID</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Completed</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="t : ${tasks}">
+            <td th:text="${t.taskId()}"></td>
+            <td th:text="${t.taskDescription()}"></td>
+            <td th:text="${t.requestId()}"></td>
+            <td th:text="${t.departmentId()}"></td>
+            <td th:text="${t.staffId() != null ? t.staffId() : '—'}"></td>
+            <td th:text="${t.dueDate() != null ? t.dueDate() : '—'}"></td>
+            <td>
+              <span th:if="${t.taskStatus() == 'Completed'}"    class="badge badge-green"  th:text="${t.taskStatus()}"></span>
+              <span th:if="${t.taskStatus() == 'In Progress'}"  class="badge badge-blue"   th:text="${t.taskStatus()}"></span>
+              <span th:if="${t.taskStatus() == 'Overdue'}"      class="badge badge-red"    th:text="${t.taskStatus()}"></span>
+              <span th:if="${t.taskStatus() == 'Open'}"         class="badge badge-yellow" th:text="${t.taskStatus()}"></span>
+              <span th:if="${t.taskStatus() != 'Completed' and t.taskStatus() != 'In Progress'
+                         and t.taskStatus() != 'Overdue'    and t.taskStatus() != 'Open'}"
+                    class="badge badge-gray" th:text="${t.taskStatus() != null ? t.taskStatus() : '—'}"></span>
+            </td>
+            <td th:text="${t.completionDate() != null ? t.completionDate() : '—'}"></td>
+            <td>
+              <a class="btn btn-primary" style="padding:5px 12px;font-size:.8rem;"
+                 th:href="@{/task/{id}/edit(id=${t.taskId()})}">Edit Status</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="row-count" th:text="'Total: ' + ${tasks.size()} + ' task(s)'"></p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

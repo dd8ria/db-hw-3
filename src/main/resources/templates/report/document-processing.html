@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Document Processing — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+<main>
+  <p class="page-title">Report 4 — Document Processing Report</p>
+  <p class="page-sub">Based on output document <strong>OD4</strong> | Source: Document, StaffMember</p>
+  <div class="card">
+    <h2>Results</h2>
+    <p th:if="${rows.isEmpty()}" style="color:#888;font-size:.9rem;">No documents registered yet.</p>
+    <div class="tbl-wrap" th:unless="${rows.isEmpty()}">
+      <table>
+        <thead>
+          <tr>
+            <th>Doc ID</th><th>Request ID</th><th>Type</th><th>Title</th>
+            <th>Prepared By</th><th>Registration Date</th><th>Confidentiality</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="r : ${rows}">
+            <td th:text="${r.documentId()}"></td>
+            <td th:text="${r.requestId() != null ? r.requestId() : '—'}"></td>
+            <td th:text="${r.documentType() != null ? r.documentType() : '—'}"></td>
+            <td th:text="${r.documentTitle() != null ? r.documentTitle() : '—'}"></td>
+            <td th:text="${r.preparedBy() != null ? r.preparedBy() : '—'}"></td>
+            <td th:text="${r.registrationDate() != null ? r.registrationDate() : '—'}"></td>
+            <td>
+              <span th:if="${r.confidentialityLevel() == 'Confidential'}" class="badge badge-red"    th:text="${r.confidentialityLevel()}"></span>
+              <span th:if="${r.confidentialityLevel() == 'Internal'}"     class="badge badge-yellow" th:text="${r.confidentialityLevel()}"></span>
+              <span th:if="${r.confidentialityLevel() == 'Public'}"       class="badge badge-green"  th:text="${r.confidentialityLevel()}"></span>
+              <span th:if="${r.confidentialityLevel() != 'Confidential' and r.confidentialityLevel() != 'Internal' and r.confidentialityLevel() != 'Public'}"
+                    class="badge badge-gray" th:text="${r.confidentialityLevel() != null ? r.confidentialityLevel() : '—'}"></span>
+            </td>
+            <td>
+              <span th:if="${r.documentStatus() == 'Approved'}"  class="badge badge-green"  th:text="${r.documentStatus()}"></span>
+              <span th:if="${r.documentStatus() == 'In Review'}" class="badge badge-blue"   th:text="${r.documentStatus()}"></span>
+              <span th:if="${r.documentStatus() == 'Draft'}"     class="badge badge-yellow" th:text="${r.documentStatus()}"></span>
+              <span th:if="${r.documentStatus() != 'Approved' and r.documentStatus() != 'In Review' and r.documentStatus() != 'Draft'}"
+                    class="badge badge-gray" th:text="${r.documentStatus() != null ? r.documentStatus() : '—'}"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="row-count" th:text="'Total documents: ' + ${rows.size()}"></p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

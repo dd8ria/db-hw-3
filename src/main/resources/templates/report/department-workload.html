@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Department Workload — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+<main>
+  <p class="page-title">Report 3 — Department Workload Report</p>
+  <p class="page-sub">Based on output document <strong>OD3</strong> | Source: Department, RequestAssignment, IncomingRequest, Task</p>
+  <div class="card">
+    <h2>Results</h2>
+    <p th:if="${rows.isEmpty()}" style="color:#888;font-size:.9rem;">No records found.</p>
+    <div class="tbl-wrap" th:unless="${rows.isEmpty()}">
+      <table>
+        <thead>
+          <tr>
+            <th>Dept ID</th><th>Department Name</th><th>Active Requests</th>
+            <th>Open Tasks</th><th>Completed Tasks</th><th>Overdue Tasks</th>
+            <th>Avg Processing Time (days)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="r : ${rows}">
+            <td th:text="${r.departmentId()}"></td>
+            <td th:text="${r.departmentName()}"></td>
+            <td th:text="${r.numberOfActiveRequests()}"></td>
+            <td th:text="${r.numberOfOpenTasks()}"></td>
+            <td th:text="${r.numberOfCompletedTasks()}"></td>
+            <td>
+              <span th:if="${r.overdueTasksCount() > 0}" class="badge badge-red"   th:text="${r.overdueTasksCount()}"></span>
+              <span th:if="${r.overdueTasksCount() == 0}" class="badge badge-green">0</span>
+            </td>
+            <td th:text="${r.averageProcessingTime() != null ?
+                          #numbers.formatDecimal(r.averageProcessingTime(), 1, 1) : '—'}"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="row-count" th:text="'Departments: ' + ${rows.size()}"></p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

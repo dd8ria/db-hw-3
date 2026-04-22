@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Reports — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+<main>
+  <p class="page-title">Reports Dashboard</p>
+  <p class="page-sub">Step 8 — 4 reports corresponding to output documents from Step 1</p>
+
+  <div class="report-grid">
+    <a class="report-card" th:href="@{/report/request-status}">
+      <div class="rc-num">01</div>
+      <div class="rc-title">Request Status Summary</div>
+      <div class="rc-desc">OD1 — Overview of incoming requests with assignment and document/task counts.</div>
+    </a>
+    <a class="report-card" th:href="@{/report/overdue-tasks}">
+      <div class="rc-num">02</div>
+      <div class="rc-title">Overdue Tasks Report</div>
+      <div class="rc-desc">OD2 — Tasks whose due date has passed and that are not yet completed.</div>
+    </a>
+    <a class="report-card" th:href="@{/report/department-workload}">
+      <div class="rc-num">03</div>
+      <div class="rc-title">Department Workload Report</div>
+      <div class="rc-desc">OD3 — Active requests, open tasks, and average processing time per department.</div>
+    </a>
+    <a class="report-card" th:href="@{/report/document-processing}">
+      <div class="rc-num">04</div>
+      <div class="rc-title">Document Processing Report</div>
+      <div class="rc-desc">OD4 — Status and details of all internal documents registered in the system.</div>
+    </a>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Register Request — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+
+<main>
+  <p class="page-title" th:text="${pageTitle}">Add Incoming Request</p>
+  <p class="page-sub">Form 1 — Based on input document <strong>ID1: Incoming Request Form</strong> | Operation type: <strong>INSERT</strong></p>
+
+  <div class="card" style="max-width:680px;">
+    <form th:action="${formAction}" method="post" th:object="${form}">
+
+      <div class="form-group">
+        <label for="submissionDate">Submission Date *</label>
+        <input type="date" id="submissionDate" th:field="*{submissionDate}"/>
+        <div class="field-error" th:if="${#fields.hasErrors('submissionDate')}"
+             th:errors="*{submissionDate}"></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="form-group">
+          <label for="senderName">Sender Name *</label>
+          <input type="text" id="senderName" th:field="*{senderName}" placeholder="e.g. Ivan Petrenko"/>
+          <div class="field-error" th:if="${#fields.hasErrors('senderName')}"
+               th:errors="*{senderName}"></div>
+        </div>
+        <div class="form-group">
+          <label for="senderType">Sender Type *</label>
+          <select id="senderType" th:field="*{senderType}">
+            <option value="Citizen">Citizen</option>
+            <option value="Organization">Organization</option>
+            <option value="Institution">Institution</option>
+          </select>
+          <div class="field-error" th:if="${#fields.hasErrors('senderType')}"
+               th:errors="*{senderType}"></div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="form-group">
+          <label for="contactInformation">Contact Information</label>
+          <input type="text" id="contactInformation" th:field="*{contactInformation}"
+                 placeholder="e.g. email@example.com"/>
+        </div>
+        <div class="form-group">
+          <label for="submissionChannel">Submission Channel *</label>
+          <select id="submissionChannel" th:field="*{submissionChannel}">
+            <option value="Email">Email</option>
+            <option value="Web Form">Web Form</option>
+            <option value="Phone">Phone</option>
+            <option value="In Person">In Person</option>
+            <option value="Mail">Mail</option>
+          </select>
+          <div class="field-error" th:if="${#fields.hasErrors('submissionChannel')}"
+               th:errors="*{submissionChannel}"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Subject *</label>
+        <input type="text" id="subject" th:field="*{subject}"
+               placeholder="Brief description of the request topic"/>
+        <div class="field-error" th:if="${#fields.hasErrors('subject')}"
+             th:errors="*{subject}"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="requestSummary">Request Summary</label>
+        <textarea id="requestSummary" th:field="*{requestSummary}"
+                  placeholder="Detailed description of the request (optional)"></textarea>
+        <div class="field-error" th:if="${#fields.hasErrors('requestSummary')}"
+             th:errors="*{requestSummary}"></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div class="form-group">
+          <label for="priorityLevel">Priority Level *</label>
+          <select id="priorityLevel" th:field="*{priorityLevel}">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <div class="field-error" th:if="${#fields.hasErrors('priorityLevel')}"
+               th:errors="*{priorityLevel}"></div>
+        </div>
+        <div class="form-group">
+          <label for="officeId">Office *</label>
+          <select id="officeId" th:field="*{officeId}">
+            <option value="">— Select Office —</option>
+            <option th:each="o : ${offices}"
+                    th:value="${o.officeId()}"
+                    th:text="${o.officeName()}"></option>
+          </select>
+          <div class="field-error" th:if="${#fields.hasErrors('officeId')}"
+               th:errors="*{officeId}"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <button type="submit" class="btn btn-primary" th:text="${submitLabel}">Register Request</button>
+        <a class="btn btn-secondary" th:href="@{/incoming-request}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Update Task Status — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+
+<main>
+  <p class="page-title">Update Task Status</p>
+  <p class="page-sub">Form 2 — Based on input document <strong>ID5: Task Status Update Record</strong> | Operation type: <strong>UPDATE</strong></p>
+
+  <!-- Current task info -->
+  <div class="card" style="max-width:680px; border-left:4px solid #6b0f1a;">
+    <h2>Current Task Details</h2>
+    <table style="font-size:.87rem;">
+      <tr><td style="padding:4px 12px 4px 0; color:#777; font-weight:600; width:160px;">Task ID</td>
+          <td th:text="${task.taskId()}"></td></tr>
+      <tr><td style="padding:4px 12px 4px 0; color:#777; font-weight:600;">Description</td>
+          <td th:text="${task.taskDescription()}"></td></tr>
+      <tr><td style="padding:4px 12px 4px 0; color:#777; font-weight:600;">Request ID</td>
+          <td th:text="${task.requestId()}"></td></tr>
+      <tr><td style="padding:4px 12px 4px 0; color:#777; font-weight:600;">Department ID</td>
+          <td th:text="${task.departmentId()}"></td></tr>
+      <tr><td style="padding:4px 12px 4px 0; color:#777; font-weight:600;">Due Date</td>
+          <td th:text="${task.dueDate() != null ? task.dueDate() : '—'}"></td></tr>
+      <tr><td style="padding:4px 12px 4px 0; color:#777; font-weight:600;">Current Status</td>
+          <td th:text="${task.taskStatus() != null ? task.taskStatus() : '—'}"></td></tr>
+    </table>
+  </div>
+
+  <!-- Edit form -->
+  <div class="card" style="max-width:680px;">
+    <h2>Update Status</h2>
+    <form th:action="@{/task/{id}/edit(id=${task.taskId()})}"
+          method="post"
+          th:object="${form}">
+
+      <div class="form-group">
+        <label for="taskStatus">New Task Status *</label>
+        <select id="taskStatus" th:field="*{taskStatus}">
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+          <option value="Overdue">Overdue</option>
+        </select>
+        <div class="field-error" th:if="${#fields.hasErrors('taskStatus')}"
+             th:errors="*{taskStatus}"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="completionDate">Completion Date (if completed)</label>
+        <input type="date" id="completionDate" th:field="*{completionDate}"/>
+      </div>
+
+      <div class="form-group">
+        <label for="staffId">Responsible Staff Member</label>
+        <select id="staffId" th:field="*{staffId}">
+          <option value="">— Unassigned —</option>
+          <option th:each="sm : ${staffMembers}"
+                  th:value="${sm.staffId()}"
+                  th:text="${sm.fullName() + ' (' + sm.position() + ')'}"></option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a class="btn btn-secondary" th:href="@{/task}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</main>
+</body>
+</html>

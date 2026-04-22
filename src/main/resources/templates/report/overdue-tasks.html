@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Overdue Tasks — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+<main>
+  <p class="page-title">Report 2 — Overdue Tasks Report</p>
+  <p class="page-sub">Based on output document <strong>OD2</strong> | Source: Task, Department, StaffMember</p>
+  <div class="card">
+    <h2>Results</h2>
+    <p th:if="${rows.isEmpty()}" style="color:#155724;font-size:.9rem;">✓ No overdue tasks found.</p>
+    <div class="tbl-wrap" th:unless="${rows.isEmpty()}">
+      <table>
+        <thead>
+          <tr>
+            <th>Task ID</th><th>Request ID</th><th>Description</th>
+            <th>Responsible Department</th><th>Staff Member</th>
+            <th>Due Date</th><th>Status</th><th>Days Overdue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="r : ${rows}">
+            <td th:text="${r.taskId()}"></td>
+            <td th:text="${r.requestId()}"></td>
+            <td th:text="${r.taskDescription()}"></td>
+            <td th:text="${r.responsibleDepartment() != null ? r.responsibleDepartment() : '—'}"></td>
+            <td th:text="${r.responsibleStaffMember() != null ? r.responsibleStaffMember() : '—'}"></td>
+            <td th:text="${r.dueDate()}"></td>
+            <td><span class="badge badge-red" th:text="${r.currentStatus() != null ? r.currentStatus() : 'Open'}"></span></td>
+            <td><strong style="color:#c0392b;" th:text="${r.daysOverdue()}"></strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="row-count" th:text="'Overdue tasks: ' + ${rows.size()}"></p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Incoming Requests — Office of a President</title>
+  <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/layout :: header-nav}"></div>
+
+<main>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+    <p class="page-title">Incoming Requests</p>
+    <a class="btn btn-primary" th:href="@{/incoming-request/create}">+ Register New Request</a>
+  </div>
+  <p class="page-sub">Form 1: Register &nbsp;|&nbsp; Form 3: Delete (with cascade)</p>
+
+  <!-- alerts -->
+  <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+  <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+  <div class="card">
+    <h2>All Registered Requests</h2>
+
+    <div th:if="${requests.isEmpty()}">
+      <p style="color:#888;font-size:.9rem;">No requests registered yet.</p>
+    </div>
+
+    <div class="tbl-wrap" th:unless="${requests.isEmpty()}">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Submission Date</th>
+            <th>Sender Name</th>
+            <th>Sender Type</th>
+            <th>Subject</th>
+            <th>Channel</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Office</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="r : ${requests}">
+            <td th:text="${r.requestId()}"></td>
+            <td th:text="${r.submissionDate()}"></td>
+            <td th:text="${r.senderName()}"></td>
+            <td th:text="${r.senderType()}"></td>
+            <td th:text="${r.subject()}"></td>
+            <td th:text="${r.submissionChannel()}"></td>
+            <td>
+              <span th:if="${r.priorityLevel() == 'High'}"   class="badge badge-red"    th:text="${r.priorityLevel()}"></span>
+              <span th:if="${r.priorityLevel() == 'Medium'}" class="badge badge-yellow" th:text="${r.priorityLevel()}"></span>
+              <span th:if="${r.priorityLevel() == 'Low'}"    class="badge badge-green"  th:text="${r.priorityLevel()}"></span>
+              <span th:if="${r.priorityLevel() != 'High' and r.priorityLevel() != 'Medium' and r.priorityLevel() != 'Low'}"
+                    class="badge badge-gray" th:text="${r.priorityLevel() != null ? r.priorityLevel() : '—'}"></span>
+            </td>
+            <td>
+              <span th:if="${r.currentStatus() == 'Completed'}"                            class="badge badge-green"  th:text="${r.currentStatus()}"></span>
+              <span th:if="${r.currentStatus() == 'In Progress' or r.currentStatus() == 'Assigned'}" class="badge badge-blue"   th:text="${r.currentStatus()}"></span>
+              <span th:if="${r.currentStatus() == 'Registered'}"                           class="badge badge-gray"   th:text="${r.currentStatus()}"></span>
+              <span th:if="${r.currentStatus() != 'Completed' and r.currentStatus() != 'In Progress'
+                         and r.currentStatus() != 'Assigned'  and r.currentStatus() != 'Registered'}"
+                    class="badge badge-yellow" th:text="${r.currentStatus() != null ? r.currentStatus() : '—'}"></span>
+            </td>
+            <td th:text="${r.officeId()}"></td>
+            <td>
+              <!-- Form 3: Delete -->
+              <form th:action="@{/incoming-request/{id}/delete(id=${r.requestId()})}"
+                    method="post"
+                    onsubmit="return confirm('Delete request #' + this.dataset.id + '? All related routing, assignment, and task records will be deleted automatically.');"
+                    th:data-id="${r.requestId()}"
+                    style="display:inline;">
+                <button type="submit" class="btn btn-danger" style="padding:5px 12px;font-size:.8rem;">Delete</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="row-count" th:text="'Total: ' + ${requests.size()} + ' request(s)'"></p>
+    </div>
+  </div>
+</main>
+</body>
+</html>
